@@ -1,0 +1,46 @@
+<div class="card">
+  <h2>Comentario Pedagógico</h2>
+  
+  <p>Obra ID: <strong>{{ obraId !== 0 ? obraId : 'Cargando...' }}</strong></p>
+
+  <form [formGroup]="feedbackForm" (ngSubmit)="enviarFeedback()" class="form-group">
+    
+    <label for="comentario">Comentario:</label>
+    <textarea 
+      id="comentario" 
+      formControlName="comentario" 
+      rows="4" 
+      placeholder="Escribe aquí el análisis pedagógico de la obra...">
+    </textarea>
+    
+    <div *ngIf="feedbackForm.get('comentario')?.invalid && feedbackForm.get('comentario')?.touched" class="error-msg">
+      El comentario es obligatorio y debe tener al menos 10 caracteres.
+    </div>
+
+    <label for="calificacion" style="margin-top: 15px;">Calificación (1-10):</label>
+    <input 
+      type="number" 
+      id="calificacion" 
+      formControlName="calificacion" 
+      min="1" 
+      max="10">
+      
+    <div *ngIf="feedbackForm.get('calificacion')?.invalid && feedbackForm.get('calificacion')?.touched" class="error-msg">
+      La calificación debe ser un número válido entre 1 y 10.
+    </div>
+
+    <button 
+      type="submit" 
+      class="btn-primary" 
+      [disabled]="feedbackForm.invalid || cargando" 
+      style="margin-top: 20px; width: fit-content;">
+      {{ cargando ? 'Enviando...' : 'Enviar Feedback' }}
+    </button>
+  </form>
+</div>
+
+<div *ngIf="mensajeNotificacion" 
+     class="toast-notification" 
+     [ngClass]="tipoNotificacion">
+  {{ mensajeNotificacion }}
+</div>

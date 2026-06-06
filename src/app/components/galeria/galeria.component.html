@@ -1,0 +1,36 @@
+<div class="galeria-container">
+  <h2>Galería de Arte de los Alumnos</h2>
+  <p>Explora los trabajos multimedia registrados en el sistema.</p>
+
+  <div class="galeria-grid">
+    
+    <div *ngFor="let obra of listaObras" class="card obra-card">
+      
+      <img [src]="obra.url_imagen" 
+           (error)="obra.url_imagen = 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=500&q=80'"
+           [alt]="'Obra: ' + obra.titulo" 
+           class="obra-img">
+
+      <h3 style="margin-top: 0;">{{ obra.titulo }}</h3>
+      
+      <p style="margin-bottom: 15px;">
+        <strong>ID Alumno:</strong> {{ obra.id_alumno }}
+      </p>
+      
+      <div style="margin-top: auto;">
+        <span class="tecnica-badge">
+          {{ obra.tecnica }}
+        </span>
+      </div>
+
+      <a [routerLink]="['/feedback', obra.id_obra]" class="btn-primary" style="margin-top: 15px;">
+  Ver / Calificar
+</a>
+    </div>
+
+  </div>
+  
+  <div *ngIf="listaObras.length === 0" class="card" style="text-align: center;">
+    <p>No hay obras registradas para mostrar en este momento.</p>
+  </div>
+</div>

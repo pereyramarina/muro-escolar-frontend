@@ -1,1 +1,280 @@
-/* You can add global styles to this file, and also import other style files */
+/* ========================================================
+   VARIABLES DE DISEÑO - Paleta Coolors (Institucional)
+   ======================================================== */
+:root {
+  --bg-color: #fefae0;            /* Crema - Fondo general */
+  --card-bg: #e9edc9;             /* Verde muy claro - Fondo de tarjetas */
+  --primary-text: #2c3e50;        /* Azul oscuro - Texto principal */
+  --accent-color: #d4a373;        /* Ocre - Botones y acciones */
+  --success-color: #ccd5ae;       /* Verde suave - Estados de éxito */
+  --warning-color: #faedcd;       /* Amarillo suave - Alertas */
+  
+  --border-radius: 8px;
+  --card-shadow: 0 4px 6px rgba(0,0,0,0.05);
+}
+
+/* ========================================================
+   ESTILOS BASE
+   ======================================================== */
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--bg-color);
+  color: var(--primary-text);
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+/* ========================================================
+   COMPONENTES GLOBALES (Cards, Botones)
+   ======================================================== */
+.card {
+  max-width: 800px;
+  margin: 40px auto;
+  padding: 25px;
+  background: var(--card-bg);
+  border-radius: var(--border-radius);
+  box-shadow: var(--card-shadow);
+}
+
+.btn-primary {
+  background-color: var(--accent-color);
+  color: white;
+  padding: 12px 24px;
+  border-radius: var(--border-radius);
+  border: none;
+  cursor: pointer;
+  font-weight: bold;
+  transition: filter 0.3s ease;
+  text-decoration: none;
+  display: inline-block;
+  text-align: center;
+}
+
+.btn-primary:hover {
+  filter: brightness(90%);
+}
+
+.btn-primary:disabled {
+  background-color: #bdc3c7;
+  cursor: not-allowed;
+}
+
+/* ========================================================
+   FORMULARIOS
+   ======================================================== */
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin-bottom: 15px;
+}
+
+.form-group label {
+  font-weight: bold;
+}
+
+.form-group textarea, 
+.form-group input {
+  padding: 12px;
+  border-radius: var(--border-radius);
+  border: 1px solid var(--accent-color);
+  background: white;
+  width: 100%;
+  box-sizing: border-box;
+}
+
+.error-msg {
+  color: #c0392b;
+  font-size: 12px;
+  margin-top: 4px;
+}
+
+/* ========================================================
+   DASHBOARD Y GALERÍA
+   ======================================================== */
+.dashboard-container, .galeria-container {
+  padding: 20px;
+}
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.stat-box {
+  background: white;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  text-align: center;
+  border: 1px solid var(--accent-color);
+}
+
+.galeria-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.obra-card {
+  margin: 0 !important;
+  display: flex;
+  flex-direction: column;
+}
+
+.obra-img {
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: var(--border-radius);
+  margin-bottom: 15px;
+}
+
+.data-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 15px;
+}
+
+.data-item {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px;
+  background: white;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--accent-color);
+}
+
+.tecnica-badge {
+  display: inline-block;
+  background-color: var(--success-color);
+  color: var(--primary-text);
+  padding: 5px 12px;
+  border-radius: 15px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* ========================================================
+   ESTILOS DE IMPRESIÓN (Para PDF)
+   ======================================================== */
+@media print {
+  .btn-primary, h2 {
+    display: none !important;
+  }
+  
+  .card {
+    box-shadow: none !important;
+    border: none !important;
+    margin: 0 !important;
+    width: 100% !important;
+    background: white !important;
+  }
+}
+/* ========================================================
+   NAVBAR (Menú de Navegación)
+   ======================================================== */
+.navbar {
+  background-color: var(--card-bg);
+  padding: 15px 40px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: var(--card-shadow);
+  border-bottom: 3px solid var(--accent-color);
+}
+
+.nav-brand {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: var(--primary-text);
+}
+
+.nav-links {
+  display: flex;
+  gap: 15px;
+}
+
+.nav-links a {
+  text-decoration: none;
+  color: var(--primary-text);
+  font-weight: bold;
+  padding: 10px 20px;
+  border-radius: var(--border-radius);
+  transition: all 0.3s ease;
+}
+
+/* Efecto al pasar el mouse */
+.nav-links a:hover {
+  background-color: var(--success-color);
+}
+
+/* Efecto cuando la pestaña está activa */
+.nav-links a.active {
+  background-color: var(--accent-color);
+  color: white;
+}
+
+.main-content {
+  padding-top: 20px;
+}
+
+/* ========================================================
+   AJUSTE DE IMPRESIÓN (Ocultar menú en PDF)
+   ======================================================== */
+@media print {
+  .navbar {
+    display: none !important;
+  }
+}
+/* ========================================================
+   NOTIFICACIONES UX (TOASTS)
+   ======================================================== */
+.toast-notification {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  padding: 15px 25px;
+  border-radius: var(--border-radius);
+  font-weight: bold;
+  box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+  z-index: 1000;
+  /* Animación de entrada fluida */
+  animation: slideInRight 0.4s cubic-bezier(0.25, 0.8, 0.25, 1) forwards;
+}
+
+/* Variantes de estado */
+.toast-notification.exito {
+  background-color: var(--success-color);
+  color: var(--primary-text);
+  border-left: 5px solid var(--accent-color);
+}
+
+.toast-notification.error {
+  background-color: #e74c3c;
+  color: white;
+  border-left: 5px solid #c0392b;
+}
+
+/* Keyframes para la animación de entrada */
+@keyframes slideInRight {
+  from {
+    transform: translateX(100%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+/* Ocultar en impresión PDF */
+@media print {
+  .toast-notification {
+    display: none !important;
+  }
+}
