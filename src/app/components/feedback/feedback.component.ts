@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { HttpClient } from '@angular/common/http';
 import { ActivatedRoute } from '@angular/router'; 
+import { environment } from '../../../environments/environment';
 
 @Component({
   selector: 'app-feedback',
@@ -65,7 +66,8 @@ export class FeedbackComponent implements OnInit {
         comentario_pedagogico: this.feedbackForm.value.comentario
       };
 
-      this.http.post('http://localhost:3000/feedback', payload).subscribe({
+      // Solicitud HTTP utilizando la variable de entorno desacoplada
+      this.http.post(`${environment.apiUrl}/feedback`, payload).subscribe({
         next: (res) => {
           this.mostrarNotificacion('Registro procesado exitosamente.', 'exito');
           this.cargando = false;
