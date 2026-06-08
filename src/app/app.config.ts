@@ -1,13 +1,16 @@
 import { ApplicationConfig } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { routes } from './app.routes';
-// Importamos el módulo para hacer peticiones al backend
-import { provideHttpClient } from '@angular/common/http';
+
+// 1. Agregamos withInterceptors a la importación
+import { provideHttpClient, withInterceptors } from '@angular/common/http'; 
+// 2. Importamos el archivo que acabamos de crear
+import { authInterceptor } from './interceptors/auth.interceptor'; 
 
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    // Registramos el cliente HTTP a nivel global
-    provideHttpClient() 
+    // 3. Registramos el interceptor en el motor HTTP
+    provideHttpClient(withInterceptors([authInterceptor])) 
   ]
 };
