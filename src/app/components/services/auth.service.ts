@@ -3,7 +3,7 @@ import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../../../environments/environment'; 
 
-// Definimos la estructura de la respuesta que nos da el Backend
+// Estructura de la respuesta que nos da el Backend
 interface AuthResponse {
   access_token: string;
   perfil: {

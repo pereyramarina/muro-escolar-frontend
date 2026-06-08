@@ -3,16 +3,16 @@ import { GaleriaComponent } from './components/galeria/galeria.component';
 import { DashboardComponent } from './components/dashboard/dashboard.component';
 import { FeedbackComponent } from './components/feedback/feedback.component';
 import { LoginComponent } from './components/login/login.component';
-import { authGuard } from './guards/auth.guard'; // 1. Importamos nuestro portero
+import { authGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
   // 1. Ruta por defecto: Apenas entra, lo mandamos a loguearse
   { path: '', redirectTo: 'login', pathMatch: 'full' },
   
-  // 2. Pantalla de Autenticación (Esta queda libre, sin guard)
+  // 2. Pantalla de Autenticación
   { path: 'login', component: LoginComponent },
   
-  // 3. Vistas Principales del Muro Escolar (AQUÍ ACTIVAMOS EL BLINDAJE)
+  // 3. Vistas Principales del Muro Escolar
   { 
     path: 'galeria', 
     component: GaleriaComponent,
