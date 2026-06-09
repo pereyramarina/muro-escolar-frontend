@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
-import { environment } from '../../../environments/environment'; 
+import { environment } from '../environments/environment'; 
 
 // Estructura de la respuesta que nos da el Backend
 interface AuthResponse {
