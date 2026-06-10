@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { HttpClient } from '@angular/common/http';
+import { DashboardService } from '../../services/dashboard.service';
 
 @Component({
   selector: 'app-dashboard',
@@ -12,15 +12,17 @@ import { HttpClient } from '@angular/common/http';
 export class DashboardComponent implements OnInit {
   metricas: any = null;
 
-  constructor(private http: HttpClient) {}
+  // Inyectamos el servicio de forma limpia
+  private dashboardService = inject(DashboardService);
 
   ngOnInit(): void {
     this.obtenerMetricas();
   }
 
   obtenerMetricas() {
-    this.http.get<any>('http://localhost:3000/reportes').subscribe({
-      next: (respuesta) => {
+    // Usamos el servicio centralizado para hacer la petición
+    this.dashboardService.obtenerMetricas().subscribe({
+      next: (respuesta: any) => {
         const d = respuesta.datos;
         const totalObras = d.metricas_globales.total_obras_registradas;
 

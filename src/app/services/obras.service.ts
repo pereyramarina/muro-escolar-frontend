@@ -3,36 +3,29 @@ import { HttpClient } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
-// Definimos el contrato de datos (Interface) para tipar estrictamente la respuesta
 export interface Obra {
-  _id?: string;
+  id?: number;       
+  id_obra?: number;  
+  _id?: string;      
   titulo: string;
   descripcion: string;
   imagenUrl: string;
   alumnoId: string;
-  fechaCreacion?: Date;
 }
 
 @Injectable({
   providedIn: 'root'
 })
 export class ObrasService {
-  private apiUrl = `${environment.apiUrl}/obras`;
+  private apiUrl = `${environment.apiUrl}/obras`; 
 
   constructor(private http: HttpClient) {}
 
-  /**
-   * Obtiene la lista completa de obras desde el backend.
-   * El Token JWT se inyecta automáticamente gracias al Interceptor.
-   */
-  obtenerObras(): Observable<Obra[]> {
-    return this.http.get<Obra[]>(this.apiUrl);
+  obtenerObras(): Observable<any> {
+    return this.http.get<any>(this.apiUrl);
   }
 
-  /**
-   * Envía una nueva obra al servidor.
-   */
-  subirObra(obra: Partial<Obra>): Observable<Obra> {
-    return this.http.post<Obra>(this.apiUrl, obra);
+  subirObra(obra: any): Observable<any> {
+    return this.http.post<any>(this.apiUrl, obra);
   }
 }
