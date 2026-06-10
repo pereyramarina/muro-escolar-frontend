@@ -7,7 +7,7 @@ import { environment } from '../../environments/environment';
   providedIn: 'root'
 })
 export class FeedbackService {
-  // Ajusta la URL base si tu microservicio expone otra ruta
+  
   private apiUrl = `${environment.apiUrl}/feedback`; 
 
   constructor(private http: HttpClient) {}

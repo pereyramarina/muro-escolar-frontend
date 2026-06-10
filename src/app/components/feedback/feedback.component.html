@@ -6,7 +6,7 @@
   <form [formGroup]="feedbackForm" (ngSubmit)="enviarFeedback()" class="form-group">
     
     <label for="comentario">Comentario:</label>
-    <textarea id="comentario" formControlName="comentario" rows="4" placeholder="Escribe aquí el análisis pedagógico de la obra..."></textarea>
+    <textarea id="comentario" formControlName="comentario" rows="4" placeholder="Escribe aquí el análisis pedagógico..."></textarea>
     
     <div *ngIf="feedbackForm.get('comentario')?.invalid && feedbackForm.get('comentario')?.touched" class="error-msg">
       El comentario es obligatorio y debe tener al menos 10 caracteres.

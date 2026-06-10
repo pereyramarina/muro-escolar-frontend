@@ -13,10 +13,10 @@
         <input type="text" formControlName="alumnoId" placeholder="Tu ID o Legajo" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
       </div>
       <div style="flex: 2; min-width: 300px;">
-        <input type="text" formControlName="imagenUrl" placeholder="URL de la imagen (ej: https://...)" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <input type="text" formControlName="imagenUrl" placeholder="URL de la imagen" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
       </div>
       <div style="flex: 100%;">
-        <input type="text" formControlName="descripcion" placeholder="Descripción breve o técnica utilizada" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <input type="text" formControlName="descripcion" placeholder="Descripción breve o técnica" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
       </div>
       <button type="submit" class="btn-primary" [disabled]="obraForm.invalid" style="padding: 10px 25px;">Subir al Muro</button>
     </form>
@@ -25,10 +25,21 @@
   <div class="galeria-grid">
     <div *ngFor="let obra of obras" class="card obra-card">
       <img [src]="obra.imagenUrl" (error)="obra.imagenUrl = 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=500&q=80'" [alt]="'Obra: ' + obra.titulo" class="obra-img">
+      
       <h3 style="margin-top: 0;">{{ obra.titulo }}</h3>
       <p style="margin-bottom: 15px;"><strong>ID Alumno:</strong> {{ obra.alumnoId }}</p>
+      
       <div style="margin-top: auto;">
         <span class="tecnica-badge">{{ obra.descripcion }}</span>
+      </div>
+
+      <div *ngIf="obra.calificacion" style="margin: 15px 0; padding: 10px; background-color: #fff9e6; border-left: 4px solid #f1c40f; border-radius: 4px;">
+        <p style="margin: 0; font-size: 0.9em;">
+          <strong>Calificación:</strong> {{ obra.calificacion }} / 10
+        </p>
+        <p style="margin: 5px 0 0 0; font-size: 0.85em; font-style: italic;">
+          "{{ obra.comentario_docente }}"
+        </p>
       </div>
 
       <a [routerLink]="['/feedback', obra.id || obra.id_obra || obra._id]" class="btn-primary" style="margin-top: 15px;">

@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute } from '@angular/router'; 
+import { ActivatedRoute, Router } from '@angular/router'; 
 import { FeedbackService } from '../../services/feedback.service';
 
 @Component({
@@ -14,13 +14,13 @@ import { FeedbackService } from '../../services/feedback.service';
 export class FeedbackComponent implements OnInit {
   feedbackForm: FormGroup;
   cargando = false;
-  obraId: number = 0; // Restaurado a número
-
+  obraId: number = 0; 
   mensajeNotificacion: string = '';
   tipoNotificacion: string = ''; 
 
   private fb = inject(FormBuilder);
   private route = inject(ActivatedRoute);
+  private router = inject(Router);
   private feedbackService = inject(FeedbackService);
 
   constructor() {
@@ -32,12 +32,7 @@ export class FeedbackComponent implements OnInit {
 
   ngOnInit(): void {
     const idParam = this.route.snapshot.paramMap.get('id');
-    
-    if (idParam && idParam !== 'undefined' && idParam !== 'NaN') {
-      this.obraId = Number(idParam);
-    } else {
-      this.obraId = 0; 
-    }
+    this.obraId = (idParam && idParam !== 'undefined' && idParam !== 'NaN') ? Number(idParam) : 0;
   }
 
   mostrarNotificacion(mensaje: string, tipo: 'exito' | 'error') {
@@ -58,14 +53,14 @@ export class FeedbackComponent implements OnInit {
       };
 
       this.feedbackService.enviarFeedback(payload).subscribe({
-        next: (res) => {
-          this.mostrarNotificacion('Registro procesado exitosamente.', 'exito');
-          this.cargando = false;
-          this.feedbackForm.reset();
+        next: () => {
+          this.mostrarNotificacion('Evaluación registrada exitosamente.', 'exito');
+          // Redirección automática tras éxito
+          setTimeout(() => this.router.navigate(['/galeria']), 1500);
         },
         error: (err) => {
           console.error('Fallo en la comunicación:', err);
-          this.mostrarNotificacion('Excepción al registrar el feedback. Revisa la consola.', 'error');
+          this.mostrarNotificacion('Error al registrar. Revisa la consola.', 'error');
           this.cargando = false;
         }
       });

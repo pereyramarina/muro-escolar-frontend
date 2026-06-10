@@ -4,13 +4,15 @@ import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
 export interface Obra {
-  id?: number;       
-  id_obra?: number;  
-  _id?: string;      
+  id?: number;
+  id_obra?: number;
+  _id?: string;
   titulo: string;
   descripcion: string;
   imagenUrl: string;
   alumnoId: string;
+  calificacion?: number;
+  comentario_docente?: string;
 }
 
 @Injectable({
