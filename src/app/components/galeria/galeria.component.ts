@@ -1,7 +1,7 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
-import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms'; 
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'; 
 import { ObrasService, Obra } from '../../services/obras.service';
 
 @Component({
@@ -23,6 +23,9 @@ export class GaleriaComponent implements OnInit {
   public paginaActual: number = 1;
   public paginasTotales: number = 1;
   public limitePorPagina: number = 10;
+
+  // --- VARIABLE DE BÚSQUEDA ---
+  public searchControl = new FormControl('');
 
   constructor() {
     this.obraForm = this.fb.group({
@@ -53,7 +56,9 @@ export class GaleriaComponent implements OnInit {
   }
 
   private obtenerObrasDelServidor(page: number): void {
-    this.obrasService.obtenerObras(page, this.limitePorPagina).subscribe({
+    const termino = this.searchControl.value || ''; // Captura el texto o envía vacío
+
+    this.obrasService.obtenerObras(page, this.limitePorPagina, termino).subscribe({
       next: (respuesta: any) => { 
         this.obras = respuesta.datos; 
         this.paginaActual = respuesta.paginaActual;
@@ -61,6 +66,16 @@ export class GaleriaComponent implements OnInit {
       },
       error: (error) => console.error('Error de red:', error)
     });
+  }
+
+  public realizarBusqueda(): void {
+    this.paginaActual = 1; // Al buscar, siempre reiniciamos a la página 1
+    this.obtenerObrasDelServidor(this.paginaActual);
+  }
+
+  public limpiarBusqueda(): void {
+    this.searchControl.setValue('');
+    this.realizarBusqueda();
   }
 
   public cambiarPagina(nuevaPagina: number): void {
@@ -74,8 +89,8 @@ export class GaleriaComponent implements OnInit {
     if (this.obraForm.valid) {
       this.obrasService.subirObra(this.obraForm.value).subscribe({
         next: (nuevaObra) => {
-          // Si sube un trabajo nuevo, lo enviamos de regreso a la página 1 para que lo vea
           this.paginaActual = 1;
+          this.searchControl.setValue(''); // Limpiamos el buscador al subir una obra
           this.obtenerObrasDelServidor(this.paginaActual);
           this.obraForm.reset();
           alert('¡Obra publicada con éxito en el Muro!');

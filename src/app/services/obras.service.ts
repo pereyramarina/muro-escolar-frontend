@@ -23,10 +23,14 @@ export class ObrasService {
 
   constructor(private http: HttpClient) {}
 
-  obtenerObras(page: number = 1, limit: number = 10): Observable<any> {
-    const params = new HttpParams()
+  obtenerObras(page: number = 1, limit: number = 10, search: string = ''): Observable<any> {
+    let params = new HttpParams()
       .set('page', page.toString())
       .set('limit', limit.toString());
+
+    if (search) {
+      params = params.set('search', search);
+    }
 
     return this.http.get<any>(this.apiUrl, { params });
   }
