@@ -48,7 +48,7 @@ export class FeedbackComponent implements OnInit {
       const payload = {
         id_obra: this.obraId,
         id_docente: 2, 
-        comentario_pedagogico: this.feedbackForm.value.comentario,
+        comentario: this.feedbackForm.value.comentario,
         calificacion: this.feedbackForm.value.calificacion
       };
 
