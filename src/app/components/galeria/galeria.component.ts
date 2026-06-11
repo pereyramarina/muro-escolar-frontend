@@ -17,9 +17,12 @@ export class GaleriaComponent implements OnInit {
 
   public obras: Obra[] = [];
   public obraForm: FormGroup; 
-  
-  // Variable para controlar la visibilidad del formulario en el HTML
   public esAlumno: boolean = false; 
+
+  // --- VARIABLES DE PAGINACIÓN ---
+  public paginaActual: number = 1;
+  public paginasTotales: number = 1;
+  public limitePorPagina: number = 10;
 
   constructor() {
     this.obraForm = this.fb.group({
@@ -32,7 +35,7 @@ export class GaleriaComponent implements OnInit {
 
   ngOnInit(): void {
     this.verificarRol();
-    this.obtenerObrasDelServidor();
+    this.obtenerObrasDelServidor(this.paginaActual);
   }
 
   private verificarRol(): void {
@@ -41,8 +44,6 @@ export class GaleriaComponent implements OnInit {
       try {
         const payloadBase64 = token.split('.')[1];
         const payloadJson = JSON.parse(atob(payloadBase64));
-        
-        // Verificamos si el rol es 'alumno' para mostrarle el formulario
         this.esAlumno = payloadJson.rol === 'alumno'; 
       } catch (error) {
         console.error('Error al decodificar el token:', error);
@@ -51,20 +52,31 @@ export class GaleriaComponent implements OnInit {
     }
   }
 
-  private obtenerObrasDelServidor(): void {
-    this.obrasService.obtenerObras().subscribe({
+  private obtenerObrasDelServidor(page: number): void {
+    this.obrasService.obtenerObras(page, this.limitePorPagina).subscribe({
       next: (respuesta: any) => { 
         this.obras = respuesta.datos; 
+        this.paginaActual = respuesta.paginaActual;
+        this.paginasTotales = respuesta.paginasTotales;
       },
       error: (error) => console.error('Error de red:', error)
     });
+  }
+
+  public cambiarPagina(nuevaPagina: number): void {
+    if (nuevaPagina >= 1 && nuevaPagina <= this.paginasTotales) {
+      this.paginaActual = nuevaPagina;
+      this.obtenerObrasDelServidor(this.paginaActual);
+    }
   }
 
   public guardarObra(): void {
     if (this.obraForm.valid) {
       this.obrasService.subirObra(this.obraForm.value).subscribe({
         next: (nuevaObra) => {
-          this.obtenerObrasDelServidor();
+          // Si sube un trabajo nuevo, lo enviamos de regreso a la página 1 para que lo vea
+          this.paginaActual = 1;
+          this.obtenerObrasDelServidor(this.paginaActual);
           this.obraForm.reset();
           alert('¡Obra publicada con éxito en el Muro!');
         },

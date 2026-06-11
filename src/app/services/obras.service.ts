@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import { environment } from '../../environments/environment';
 
@@ -23,8 +23,12 @@ export class ObrasService {
 
   constructor(private http: HttpClient) {}
 
-  obtenerObras(): Observable<any> {
-    return this.http.get<any>(this.apiUrl);
+  obtenerObras(page: number = 1, limit: number = 10): Observable<any> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('limit', limit.toString());
+
+    return this.http.get<any>(this.apiUrl, { params });
   }
 
   subirObra(obra: any): Observable<any> {
