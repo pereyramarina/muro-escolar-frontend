@@ -14,17 +14,27 @@ import { AuthService } from '../../auth.service';
 export class LoginComponent {
   loginForm: FormGroup;
   mensajeError: string = '';
+  rolSeleccionado: string | null = null;
 
   constructor(
     private fb: FormBuilder,
     private authService: AuthService,
     private router: Router
   ) {
-    // Definimos las reglas de validación: ambos campos son obligatorios
     this.loginForm = this.fb.group({
       email: ['', [Validators.required, Validators.email]],
       dni: ['', [Validators.required, Validators.minLength(7)]]
     });
+  }
+
+  seleccionarRol(rol: string) {
+    this.rolSeleccionado = rol;
+    this.mensajeError = '';
+    this.loginForm.reset();
+  }
+
+  volver() {
+    this.rolSeleccionado = null;
   }
 
   onSubmit() {
@@ -33,19 +43,21 @@ export class LoginComponent {
       
       this.authService.login(email, dni).subscribe({
         next: () => {
-          // Si el backend responde con el Token, leemos el rol y redirigimos
-          const rol = this.authService.getRole();
-          if (rol === 'admin') {
-            this.router.navigate(['/dashboard']); // Docente
-          } else if (rol === 'user') {
-            this.router.navigate(['/galeria']);   // Estudiante
+          const rolReal = this.authService.getRole(); 
+          
+          if (rolReal === 'docente') {
+            this.router.navigate(['/galeria']); 
+          } else if (rolReal === 'alumno') {
+            this.router.navigate(['/galeria']); 
+          } else if (rolReal === 'directivo') {
+            this.router.navigate(['/dashboard']); 
           } else {
-            this.router.navigate(['/dashboard']); // Directivo
+            this.router.navigate(['/login']); 
           }
         },
         error: (err) => {
           console.error(err);
-          this.mensajeError = 'Credenciales incorrectas. Verifica tu Gmail o DNI.';
+          this.mensajeError = 'Credenciales incorrectas. Verifica tu correo o DNI.';
         }
       });
     }

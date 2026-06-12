@@ -1,37 +1,54 @@
-<div class="login-wrapper">
-  <div class="login-card">
-    <h2>Muro Escolar</h2>
-    <p>Ingresa tus credenciales para acceder</p>
+<div class="login-wrapper" style="min-height: 100vh; display: flex; align-items: center; justify-content: center; background-color: #f4f7f6;">
+  <div class="login-card" style="background: white; padding: 40px; border-radius: 10px; box-shadow: 0 4px 15px rgba(0,0,0,0.1); width: 100%; max-width: 400px; text-align: center;">
 
-    <form [formGroup]="loginForm" (ngSubmit)="onSubmit()">
-      
-      <div class="form-group">
-        <label for="email">Correo Electrónico (Gmail)</label>
-        <input 
-          type="email" 
-          id="email" 
-          formControlName="email" 
-          placeholder="alumno@gmail.com"
-        >
+    <div *ngIf="!rolSeleccionado">
+      <h2 style="color: #2c3e50; margin-bottom: 10px;">Muro Escolar</h2>
+      <p style="color: #7f8c8d; margin-bottom: 30px;">Selecciona tu perfil institucional para ingresar</p>
+
+      <div style="display: flex; flex-direction: column; gap: 15px;">
+        <button (click)="seleccionarRol('alumno')" style="padding: 15px; font-size: 16px; font-weight: bold; background-color: #2e7d32; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s;">
+          ALUMNO
+        </button>
+        
+        <button (click)="seleccionarRol('docente')" style="padding: 15px; font-size: 16px; font-weight: bold; background-color: #1976d2; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s;">
+          DOCENTE
+        </button>
+        
+        <button (click)="seleccionarRol('directivo')" style="padding: 15px; font-size: 16px; font-weight: bold; background-color: #7b1fa2; color: white; border: none; border-radius: 8px; cursor: pointer; transition: 0.3s;">
+          DIRECTIVO
+        </button>
       </div>
+    </div>
 
-      <div class="form-group">
-        <label for="dni">DNI (Contraseña)</label>
-        <input 
-          type="password" 
-          id="dni" 
-          formControlName="dni" 
-          placeholder="Ingresa tu DNI sin puntos"
-        >
-      </div>
+    <div *ngIf="rolSeleccionado">
+      <h2 style="color: #2c3e50; margin-bottom: 10px; text-transform: uppercase;">Ingreso {{ rolSeleccionado }}</h2>
+      <p style="color: #7f8c8d; margin-bottom: 25px;">Ingresa tus credenciales para acceder</p>
 
-      <div class="error-box" *ngIf="mensajeError">
-        {{ mensajeError }}
-      </div>
+      <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" style="text-align: left;">
+        
+        <div class="form-group" style="margin-bottom: 15px;">
+          <label for="email" style="display: block; margin-bottom: 5px; font-weight: bold; color: #34495e;">Correo Electrónico institucional</label>
+          <input type="email" id="email" formControlName="email" placeholder="usuario@escuela.com" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+        </div>
 
-      <button type="submit" [disabled]="loginForm.invalid">
-        Iniciar Sesión
-      </button>
-    </form>
+        <div class="form-group" style="margin-bottom: 20px;">
+          <label for="dni" style="display: block; margin-bottom: 5px; font-weight: bold; color: #34495e;">DNI (Contraseña)</label>
+          <input type="password" id="dni" formControlName="dni" placeholder="Ingresa sin puntos ni espacios" style="width: 100%; padding: 10px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box;">
+        </div>
+
+        <div class="error-box" *ngIf="mensajeError" style="color: #e74c3c; background: #fadbd8; padding: 10px; border-radius: 5px; margin-bottom: 15px; text-align: center; border: 1px solid #e74c3c;">
+          {{ mensajeError }}
+        </div>
+
+        <button type="submit" [disabled]="loginForm.invalid" style="width: 100%; padding: 12px; font-size: 16px; font-weight: bold; background-color: #34495e; color: white; border: none; border-radius: 5px; cursor: pointer; margin-bottom: 15px;" [style.opacity]="loginForm.invalid ? '0.5' : '1'">
+          Iniciar Sesión
+        </button>
+
+        <button type="button" (click)="volver()" style="width: 100%; padding: 10px; font-size: 14px; background-color: transparent; color: #7f8c8d; border: 1px solid #ccc; border-radius: 5px; cursor: pointer;">
+          &larr; Volver a selección de perfil
+        </button>
+      </form>
+    </div>
+
   </div>
 </div>

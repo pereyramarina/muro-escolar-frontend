@@ -1,50 +1,59 @@
 import { Component, OnInit, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { ReactiveFormsModule, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { DashboardService } from '../../services/dashboard.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-dashboard',
   standalone: true,
-  imports: [CommonModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './dashboard.component.html',
-  styleUrl: './dashboard.component.css'
+  styleUrls: ['./dashboard.component.css']
 })
 export class DashboardComponent implements OnInit {
-  metricas: any = null;
-
-  // Inyectamos el servicio de forma limpia
   private dashboardService = inject(DashboardService);
+  private authService = inject(AuthService);
+  private fb = inject(FormBuilder);
+  
+  public metricas: any = null;
+  public registroForm: FormGroup = this.fb.group({
+    nombre: ['', Validators.required],
+    apellido: ['', Validators.required],
+    email: ['', [Validators.required, Validators.email]],
+    dni: ['', [Validators.required, Validators.minLength(7)]],
+    role: ['alumno', Validators.required]
+  });
 
-  ngOnInit(): void {
-    this.obtenerMetricas();
+  ngOnInit() { 
+    this.dashboardService.obtenerMetricas().subscribe(res => this.metricas = res.datos); 
   }
 
-  obtenerMetricas() {
-    // Usamos el servicio centralizado para hacer la petición
-    this.dashboardService.obtenerMetricas().subscribe({
-      next: (respuesta: any) => {
-        const d = respuesta.datos;
-        const totalObras = d.metricas_globales.total_obras_registradas;
-
-        this.metricas = {
-          totalObras: totalObras,
-          totalFeedbacks: d.metricas_globales.total_feedbacks_emitidos,
-          alumnosActivos: d.metricas_globales.total_alumnos || 'N/A',
-          desgloseTecnicas: d.distribucion_por_tecnica.map((item: any) => ({
-            tecnica: item.tecnica,
-            cantidad: item.cantidad,
-            porcentaje: totalObras > 0 ? ((item.cantidad / totalObras) * 100).toFixed(0) : 0
-          }))
-        };
-      },
-      error: (error) => {
-        console.error('Error al conectar con el microservicio:', error);
-      }
-    });
+  registrarUsuario() {
+    if (this.registroForm.valid) {
+      // FORZAMOS LA ESTRUCTURA DEL OBJETO PARA QUE COINCIDA CON EL DTO
+      const data = {
+        nombre: this.registroForm.value.nombre,
+        apellido: this.registroForm.value.apellido,
+        email: this.registroForm.value.email,
+        dni: this.registroForm.value.dni,
+        role: this.registroForm.value.role
+      };
+      
+      console.log('Enviando desde Frontend:', data);
+      
+      this.authService.registrarUsuario(data).subscribe({
+        next: () => { 
+          alert('¡Usuario registrado!'); 
+          this.registroForm.reset({ role: 'alumno' }); 
+        },
+        error: (err) => {
+          console.error('Error capturado en Frontend:', err);
+          alert(err.error?.message || 'Error en registro');
+        }
+      });
+    }
   }
 
-  exportarPDF() {
-    // Esto abre el diálogo de impresión del navegador
-    window.print();
-  }
+  exportarPDF() { window.print(); }
 }

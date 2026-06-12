@@ -1,40 +1,60 @@
-<div class="dashboard-container">
-  <h2>Panel de Analíticas</h2>
-  
-  <button (click)="exportarPDF()" class="btn-primary no-print" style="margin-bottom: 20px;">
-    📄 Exportar Informe PDF
-  </button>
-
-  <div *ngIf="metricas" class="card" id="dashboard-reporte">
-    <h3>Resumen General</h3>
+<div class="dashboard-wrapper">
+  <main class="dashboard-content">
     
-    <div class="stats-grid">
-      <div class="stat-box">Obras: <strong>{{ metricas.totalObras }}</strong></div>
-      <div class="stat-box">Feedbacks: <strong>{{ metricas.totalFeedbacks }}</strong></div>
-      <div class="stat-box">Alumnos: <strong>{{ metricas.alumnosActivos }}</strong></div>
-    </div>
-
-    <h3 style="margin-top: 20px;">Distribución por Técnica</h3>
-    <div class="data-list">
+    <section class="card registro-card">
+      <h2>Alta de Personal e Institucional</h2>
+      <p class="subtitle">Registra un nuevo usuario para habilitar sus credenciales de acceso al Escolar.</p>
       
-      <div *ngFor="let item of metricas.desgloseTecnicas" class="data-item" style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; padding: 10px 0; border-bottom: 1px solid #f0f0f0;">
-        
-        <span style="flex: 1; font-weight: 500; color: #333;">{{ item.tecnica }}</span>
-        
-        <div class="progress-track no-print" style="flex: 2; height: 10px; background-color: #e9ecef; border-radius: 5px; margin: 0 15px; overflow: hidden;">
-          <div [style.width.%]="item.porcentaje" style="height: 100%; background-color: #3498db; transition: width 0.5s ease;"></div>
+      <form [formGroup]="registroForm" (ngSubmit)="registrarUsuario()">
+        <div class="input-row">
+          <div class="field"><label>Nombre</label><input type="text" formControlName="nombre"></div>
+          <div class="field"><label>Apellido</label><input type="text" formControlName="apellido"></div>
         </div>
+        <div class="field"><label>Correo (Gmail)</label><input type="email" formControlName="email"></div>
+        <div class="field"><label>DNI (Contraseña)</label><input type="password" formControlName="dni"></div>
+        <div class="field">
+          <label>Rol Asignado</label>
+          <select formControlName="role">
+            <option value="alumno">ALUMNO</option>
+            <option value="docente">DOCENTE</option>
+            <option value="directivo">DIRECTIVO</option>
+          </select>
+        </div>
+        <button type="submit" [disabled]="registroForm.invalid" class="btn-submit">Crear Usuario</button>
+      </form>
+    </section>
 
-        <span style="flex: 1; text-align: right; color: #555;">
-          <strong>{{ item.cantidad }}</strong> obras ({{ item.porcentaje }}%)
-        </span>
-        
+    <section class="card reporte-card">
+      <div class="header-reporte">
+        <h2>Reporte Estadístico</h2>
+        <button (click)="exportarPDF()" class="btn-pdf">📄 Exportar PDF</button>
       </div>
-      
-    </div>
-  </div>
 
-  <div *ngIf="!metricas" class="card" style="text-align: center; color: #666;">
-    <p>Cargando datos analíticos...</p>
-  </div>
+      <div class="stats-grid">
+        <div class="stat-card">
+          <span class="icon">🎨</span>
+          <div class="text"><strong>{{metricas?.totalObras || 0}}</strong><br>Obras Registradas</div>
+        </div>
+        <div class="stat-card">
+          <span class="icon">💬</span>
+          <div class="text"><strong>{{metricas?.totalFeedbacks || 0}}</strong><br>Feedbacks Emitidos</div>
+        </div>
+        <div class="stat-card">
+          <span class="icon">🎓</span>
+          <div class="text"><strong>{{metricas?.alumnosActivos || 'N/A'}}</strong><br>Alumnos Registrados</div>
+        </div>
+      </div>
+
+      <h3>Distribución por Técnica</h3>
+      <div class="data-list">
+        <div *ngFor="let item of metricas?.desgloseTecnicas" class="data-item">
+          <span class="icon-tecnica">🖌️</span>
+          <span class="name">{{ item.tecnica }}</span>
+          <div class="progress-bar"><div [style.width.%]="item.porcentaje"></div></div>
+          <span class="value">{{ item.cantidad }} obras ({{ item.porcentaje }}%)</span>
+        </div>
+      </div>
+    </section>
+
+  </main>
 </div>

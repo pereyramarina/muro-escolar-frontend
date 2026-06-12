@@ -1,9 +1,8 @@
 import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment'; 
 
-// Estructura de la respuesta que nos da el Backend
 interface AuthResponse {
   access_token: string;
   perfil: {
@@ -17,16 +16,15 @@ interface AuthResponse {
   providedIn: 'root'
 })
 export class AuthService {
-  // Tomamos la URL base del backend desde los environments que configuraste
-  private apiUrl = `${environment.apiUrl}/auth/login`;
+  private apiUrl = `${environment.apiUrl}/auth`;
 
   constructor(private http: HttpClient) {}
 
   /**
-   * Envía las credenciales del alumno (Gmail y DNI) al API Gateway.
+   * Envía las credenciales (Gmail y DNI) al API Gateway.
    */
   login(email: string, dni: string): Observable<AuthResponse> {
-    return this.http.post<AuthResponse>(this.apiUrl, { email, dni }).pipe(
+    return this.http.post<AuthResponse>(`${this.apiUrl}/login`, { email, dni }).pipe(
       tap(response => {
         // Guardamos el token de acceso de forma segura en el navegador
         localStorage.setItem('token', response.access_token);
@@ -35,6 +33,19 @@ export class AuthService {
         localStorage.setItem('user_profile', JSON.stringify(response.perfil));
       })
     );
+  }
+
+  registrarUsuario(datosUsuario: any): Observable<any> {
+    // Rescatamos el token del directivo almacenado en el login
+    const token = localStorage.getItem('token');
+    
+    // Inyectamos el token en los Headers para superar el JwtAuthGuard del backend
+    const headers = new HttpHeaders({
+      'Authorization': `Bearer ${token}`
+    });
+
+    // Hacemos el POST a la nueva ruta protegida
+    return this.http.post(`${this.apiUrl}/registrar`, datosUsuario, { headers });
   }
 
   logout(): void {

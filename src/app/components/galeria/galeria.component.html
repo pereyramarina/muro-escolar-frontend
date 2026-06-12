@@ -59,7 +59,7 @@
         </p>
       </div>
 
-      <a [routerLink]="['/feedback', obra.id || obra.id_obra || obra._id]" class="btn-primary" style="margin-top: 15px;">
+      <a *ngIf="esDocente" [routerLink]="['/feedback', obra.id || obra.id_obra || obra._id]" class="btn-primary" style="margin-top: 15px;">
         Ver / Calificar
       </a>
     </div>

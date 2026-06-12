@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { RouterLink } from '@angular/router';
 import { ReactiveFormsModule, FormBuilder, FormGroup, Validators, FormControl } from '@angular/forms'; 
 import { ObrasService, Obra } from '../../services/obras.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-galeria',
@@ -13,11 +14,13 @@ import { ObrasService, Obra } from '../../services/obras.service';
 })
 export class GaleriaComponent implements OnInit {
   private obrasService = inject(ObrasService);
+  private authService = inject(AuthService);
   private fb = inject(FormBuilder);
 
   public obras: Obra[] = [];
   public obraForm: FormGroup; 
   public esAlumno: boolean = false; 
+  public esDocente: boolean = false;
 
   // --- VARIABLES DE PAGINACIÓN ---
   public paginaActual: number = 1;
@@ -42,21 +45,13 @@ export class GaleriaComponent implements OnInit {
   }
 
   private verificarRol(): void {
-    const token = localStorage.getItem('token');
-    if (token) {
-      try {
-        const payloadBase64 = token.split('.')[1];
-        const payloadJson = JSON.parse(atob(payloadBase64));
-        this.esAlumno = payloadJson.rol === 'alumno'; 
-      } catch (error) {
-        console.error('Error al decodificar el token:', error);
-        this.esAlumno = false;
-      }
-    }
+    const rol = this.authService.getRole();
+    this.esAlumno = (rol === 'alumno');
+    this.esDocente = (rol === 'docente');
   }
 
   private obtenerObrasDelServidor(page: number): void {
-    const termino = this.searchControl.value || ''; // Captura el texto o envía vacío
+    const termino = this.searchControl.value || ''; 
 
     this.obrasService.obtenerObras(page, this.limitePorPagina, termino).subscribe({
       next: (respuesta: any) => { 
@@ -69,7 +64,7 @@ export class GaleriaComponent implements OnInit {
   }
 
   public realizarBusqueda(): void {
-    this.paginaActual = 1; // Al buscar, siempre reiniciamos a la página 1
+    this.paginaActual = 1; 
     this.obtenerObrasDelServidor(this.paginaActual);
   }
 
@@ -90,7 +85,7 @@ export class GaleriaComponent implements OnInit {
       this.obrasService.subirObra(this.obraForm.value).subscribe({
         next: (nuevaObra) => {
           this.paginaActual = 1;
-          this.searchControl.setValue(''); // Limpiamos el buscador al subir una obra
+          this.searchControl.setValue(''); 
           this.obtenerObrasDelServidor(this.paginaActual);
           this.obraForm.reset();
           alert('¡Obra publicada con éxito en el Muro!');

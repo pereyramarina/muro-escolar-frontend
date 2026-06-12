@@ -1,8 +1,15 @@
 <nav class="navbar">
   <div class="nav-brand">Plataforma Muro Escolar</div>
   <div class="nav-links">
-    <a routerLink="/galeria" routerLinkActive="active" [routerLinkActiveOptions]="{exact: true}">Galería</a>
-    <a routerLink="/dashboard" routerLinkActive="active">Panel Analítico</a>
+    <a routerLink="/galeria" routerLinkActive="active">Galería</a>
+    
+    <a *ngIf="esDirectivo" routerLink="/dashboard" routerLinkActive="active" class="btn-highlight">
+      Panel Analítico
+    </a>
+    
+    <button *ngIf="authService.isLoggedIn()" (click)="cerrarSesion()" class="btn-logout">
+      Cerrar Sesión
+    </button>
   </div>
 </nav>
 
