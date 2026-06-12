@@ -26,12 +26,35 @@ export class DashboardComponent implements OnInit {
   });
 
   ngOnInit() { 
-    this.dashboardService.obtenerMetricas().subscribe(res => this.metricas = res.datos); 
+    this.cargarMetricas();
+  }
+
+  // Implementación del patrón Mapper para adaptar el payload del Backend a la Vista
+  cargarMetricas() {
+    this.dashboardService.obtenerMetricas().subscribe({
+      next: (res: any) => {
+        if (!res || !res.datos) return;
+        
+        const d = res.datos;
+        const total = d.metricas_globales?.total_obras_registradas || 0;
+        
+        this.metricas = {
+          totalObras: total,
+          totalFeedbacks: d.metricas_globales?.total_feedbacks_emitidos || 0,
+          alumnosActivos: d.metricas_globales?.total_alumnos || 'N/A',
+          desgloseTecnicas: (d.distribucion_por_tecnica || []).map((item: any) => ({
+            tecnica: item.tecnica,
+            cantidad: item.cantidad,
+            porcentaje: total > 0 ? Math.round((item.cantidad / total) * 100) : 0
+          }))
+        };
+      },
+      error: (err) => console.error('Error de red al obtener métricas:', err)
+    });
   }
 
   registrarUsuario() {
     if (this.registroForm.valid) {
-      // FORZAMOS LA ESTRUCTURA DEL OBJETO PARA QUE COINCIDA CON EL DTO
       const data = {
         nombre: this.registroForm.value.nombre,
         apellido: this.registroForm.value.apellido,
@@ -44,7 +67,7 @@ export class DashboardComponent implements OnInit {
       
       this.authService.registrarUsuario(data).subscribe({
         next: () => { 
-          alert('¡Usuario registrado!'); 
+          alert('¡Usuario registrado exitosamente!'); 
           this.registroForm.reset({ role: 'alumno' }); 
         },
         error: (err) => {
