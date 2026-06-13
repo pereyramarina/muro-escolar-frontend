@@ -1,0 +1,26 @@
+.card {
+  background: white; padding: 30px; border-radius: 12px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.05); max-width: 600px; margin: 40px auto;
+}
+.form-group { display: flex; flex-direction: column; gap: 10px; margin-top: 20px; }
+label { font-weight: 600; color: #444; }
+textarea, input {
+  width: 100%; padding: 12px; border: 1px solid #ddd; border-radius: 8px; font-family: inherit;
+}
+textarea:focus, input:focus { border-color: #5c1b6a; outline: none; }
+.error-msg { color: #d32f2f; font-size: 0.85rem; margin-top: -5px; }
+.btn-primary {
+  background: #5c1b6a; color: white; border: none; padding: 12px 24px;
+  border-radius: 8px; font-weight: bold; cursor: pointer; transition: 0.3s;
+}
+.btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+
+/* --- Notificación Flotante (Toast) --- */
+.toast-notification {
+  position: fixed; bottom: 30px; right: 30px; padding: 15px 25px;
+  border-radius: 8px; color: white; font-weight: 600;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2); animation: slideIn 0.3s ease-out; z-index: 1000;
+}
+.exito { background-color: #2e7d32; }
+.error { background-color: #d32f2f; }
+@keyframes slideIn { from { transform: translateX(100%); } to { transform: translateX(0); } }
