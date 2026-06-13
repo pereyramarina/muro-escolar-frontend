@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router'; 
 import { FeedbackService } from '../../services/feedback.service';
+import { AuthService } from '../../auth.service';
 
 @Component({
   selector: 'app-feedback',
@@ -22,6 +23,7 @@ export class FeedbackComponent implements OnInit {
   private route = inject(ActivatedRoute);
   private router = inject(Router);
   private feedbackService = inject(FeedbackService);
+  private authService = inject(AuthService);
 
   constructor() {
     this.feedbackForm = this.fb.group({
@@ -45,9 +47,11 @@ export class FeedbackComponent implements OnInit {
     if (this.feedbackForm.valid && this.obraId > 0) {
       this.cargando = true;
       
+      const idDocente = this.authService.getUserId();
+      
       const payload = {
         id_obra: this.obraId,
-        id_docente: 2, 
+        id_docente: idDocente, 
         comentario: this.feedbackForm.value.comentario,
         calificacion: this.feedbackForm.value.calificacion
       };
@@ -55,7 +59,6 @@ export class FeedbackComponent implements OnInit {
       this.feedbackService.enviarFeedback(payload).subscribe({
         next: () => {
           this.mostrarNotificacion('Evaluación registrada exitosamente.', 'exito');
-          // Redirección automática tras éxito
           setTimeout(() => this.router.navigate(['/galeria']), 1500);
         },
         error: (err) => {

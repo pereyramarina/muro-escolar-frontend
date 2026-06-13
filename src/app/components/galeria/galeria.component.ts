@@ -22,22 +22,18 @@ export class GaleriaComponent implements OnInit {
   public esAlumno: boolean = false; 
   public esDocente: boolean = false;
   
-  // Archivo binario capturado
   public archivoSeleccionado: File | null = null; 
 
-  // --- VARIABLES DE PAGINACIÓN ---
   public paginaActual: number = 1;
   public paginasTotales: number = 1;
   public limitePorPagina: number = 10;
 
-  // --- VARIABLE DE BÚSQUEDA ---
   public searchControl = new FormControl('');
 
   constructor() {
     this.obraForm = this.fb.group({
       titulo: ['', Validators.required],
-      descripcion: ['', Validators.required],
-      alumnoId: ['', Validators.required]
+      descripcion: ['', Validators.required]
     });
   }
 
@@ -82,7 +78,6 @@ export class GaleriaComponent implements OnInit {
     }
   }
 
-  // Captura del archivo físico
   public capturarArchivo(event: any): void {
     const archivo = event.target.files[0];
     if (archivo) {
@@ -96,7 +91,10 @@ export class GaleriaComponent implements OnInit {
       const formData = new FormData();
       formData.append('titulo', this.obraForm.get('titulo')?.value);
       formData.append('descripcion', this.obraForm.get('descripcion')?.value);
-      formData.append('alumnoId', this.obraForm.get('alumnoId')?.value);
+      
+      const idAlumno = this.authService.getUserId();
+      formData.append('alumnoId', idAlumno ? idAlumno.toString() : ''); 
+      
       formData.append('imagen', this.archivoSeleccionado); 
 
       this.obrasService.subirObra(formData).subscribe({
