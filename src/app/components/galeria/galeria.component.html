@@ -30,12 +30,13 @@
         <input type="text" formControlName="alumnoId" placeholder="Tu ID o Legajo" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
       </div>
       <div style="flex: 2; min-width: 300px;">
-        <input type="text" formControlName="imagenUrl" placeholder="URL de la imagen" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <input type="file" (change)="capturarArchivo($event)" accept="image/*" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: white;">
       </div>
       <div style="flex: 100%;">
         <input type="text" formControlName="descripcion" placeholder="Descripción breve o técnica" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
       </div>
-      <button type="submit" class="btn-primary" [disabled]="obraForm.invalid" style="padding: 10px 25px;">Subir al Muro</button>
+      
+      <button type="submit" class="btn-primary" [disabled]="obraForm.invalid || !archivoSeleccionado" style="padding: 10px 25px;">Subir al Muro</button>
     </form>
   </div>
 

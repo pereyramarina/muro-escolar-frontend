@@ -21,6 +21,9 @@ export class GaleriaComponent implements OnInit {
   public obraForm: FormGroup; 
   public esAlumno: boolean = false; 
   public esDocente: boolean = false;
+  
+  // Archivo binario capturado
+  public archivoSeleccionado: File | null = null; 
 
   // --- VARIABLES DE PAGINACIÓN ---
   public paginaActual: number = 1;
@@ -34,7 +37,6 @@ export class GaleriaComponent implements OnInit {
     this.obraForm = this.fb.group({
       titulo: ['', Validators.required],
       descripcion: ['', Validators.required],
-      imagenUrl: ['', Validators.required],
       alumnoId: ['', Validators.required]
     });
   }
@@ -80,14 +82,30 @@ export class GaleriaComponent implements OnInit {
     }
   }
 
+  // Captura del archivo físico
+  public capturarArchivo(event: any): void {
+    const archivo = event.target.files[0];
+    if (archivo) {
+      this.archivoSeleccionado = archivo;
+    }
+  }
+
   public guardarObra(): void {
-    if (this.obraForm.valid) {
-      this.obrasService.subirObra(this.obraForm.value).subscribe({
+    if (this.obraForm.valid && this.archivoSeleccionado) {
+      
+      const formData = new FormData();
+      formData.append('titulo', this.obraForm.get('titulo')?.value);
+      formData.append('descripcion', this.obraForm.get('descripcion')?.value);
+      formData.append('alumnoId', this.obraForm.get('alumnoId')?.value);
+      formData.append('imagen', this.archivoSeleccionado); 
+
+      this.obrasService.subirObra(formData).subscribe({
         next: (nuevaObra) => {
           this.paginaActual = 1;
           this.searchControl.setValue(''); 
           this.obtenerObrasDelServidor(this.paginaActual);
           this.obraForm.reset();
+          this.archivoSeleccionado = null; 
           alert('¡Obra publicada con éxito en el Muro!');
         },
         error: (error) => {
@@ -95,6 +113,8 @@ export class GaleriaComponent implements OnInit {
           alert('Hubo un error al guardar. Revisa la consola.');
         }
       });
+    } else {
+      alert('Por favor, completa los campos de texto y selecciona una imagen.');
     }
   }
 }
