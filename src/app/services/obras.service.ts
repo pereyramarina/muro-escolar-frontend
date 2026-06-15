@@ -38,4 +38,8 @@ export class ObrasService {
   subirObra(obra: any): Observable<any> {
     return this.http.post<any>(this.apiUrl, obra);
   }
+
+  eliminarObra(id: number): Observable<any> {
+    return this.http.delete<any>(`${this.apiUrl}/${id}`);
+  }
 }

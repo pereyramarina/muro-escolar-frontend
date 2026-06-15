@@ -27,13 +27,17 @@ export class GaleriaComponent implements OnInit {
   public paginaActual: number = 1;
   public paginasTotales: number = 1;
   public limitePorPagina: number = 10;
-
   public searchControl = new FormControl('');
+  public tecnicasDisponibles: string[] = ['Acuarela', 'Óleo', 'Acrílico', 'Arte Digital', 'Dibujo a Lápiz', 'Técnica Mixta', 'Escultura', 'Fotografía'];
+  public imagenModalActiva: string | null = null;
+  
+  // Variable para validar la autoría de la obra
+  public idUsuarioLogueado: string = '';
 
   constructor() {
     this.obraForm = this.fb.group({
       titulo: ['', Validators.required],
-      descripcion: ['', Validators.required]
+      descripcion: ['', Validators.required] 
     });
   }
 
@@ -46,6 +50,8 @@ export class GaleriaComponent implements OnInit {
     const rol = this.authService.getRole();
     this.esAlumno = (rol === 'alumno');
     this.esDocente = (rol === 'docente');
+    // Inicializamos la identidad del usuario actual
+    this.idUsuarioLogueado = this.authService.getUserId()?.toString() || '';
   }
 
   private obtenerObrasDelServidor(page: number): void {
@@ -85,6 +91,14 @@ export class GaleriaComponent implements OnInit {
     }
   }
 
+  public abrirModal(url: string): void {
+    this.imagenModalActiva = url;
+  }
+
+  public cerrarModal(): void {
+    this.imagenModalActiva = null;
+  }
+
   public guardarObra(): void {
     if (this.obraForm.valid && this.archivoSeleccionado) {
       
@@ -103,6 +117,7 @@ export class GaleriaComponent implements OnInit {
           this.searchControl.setValue(''); 
           this.obtenerObrasDelServidor(this.paginaActual);
           this.obraForm.reset();
+          this.obraForm.get('descripcion')?.setValue('');
           this.archivoSeleccionado = null; 
           alert('¡Obra publicada con éxito en el Muro!');
         },
@@ -112,7 +127,30 @@ export class GaleriaComponent implements OnInit {
         }
       });
     } else {
-      alert('Por favor, completa los campos de texto y selecciona una imagen.');
+      alert('Por favor, completa el título, selecciona una técnica y adjunta una imagen.');
+    }
+  }
+
+  // --- NUEVO MÉTODO PARA ELIMINAR OBRA ---
+  public eliminarObra(idObra: number | undefined, idAlumnoObra: string): void {
+    if (!idObra) return;
+
+    if (this.idUsuarioLogueado !== idAlumnoObra) {
+      alert('Acción denegada: Restricción de autoría.');
+      return;
+    }
+
+    if (confirm('¿Confirmar eliminación permanente del registro?')) {
+      this.obrasService.eliminarObra(idObra).subscribe({
+        next: () => {
+          alert('Registro eliminado.');
+          this.obtenerObrasDelServidor(this.paginaActual); 
+        },
+        error: (err) => {
+          console.error('Falla en la red:', err);
+          alert('Error en la transacción HTTP.');
+        }
+      });
     }
   }
 }

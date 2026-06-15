@@ -30,7 +30,10 @@
         <input type="file" (change)="capturarArchivo($event)" accept="image/*" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: white;">
       </div>
       <div style="flex: 100%;">
-        <input type="text" formControlName="descripcion" placeholder="Descripción breve o técnica" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc;">
+        <select formControlName="descripcion" style="width: 100%; padding: 10px; border-radius: 5px; border: 1px solid #ccc; background-color: white; cursor: pointer;">
+          <option value="" disabled selected>Selecciona la técnica utilizada...</option>
+          <option *ngFor="let tecnica of tecnicasDisponibles" [value]="tecnica">{{ tecnica }}</option>
+        </select>
       </div>
       
       <button type="submit" class="btn-primary" [disabled]="obraForm.invalid || !archivoSeleccionado" style="padding: 10px 25px;">Subir al Muro</button>
@@ -38,8 +41,22 @@
   </div>
 
   <div class="galeria-grid">
-    <div *ngFor="let obra of obras" class="card obra-card">
-      <img [src]="obra.imagenUrl" (error)="obra.imagenUrl = 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=500&q=80'" [alt]="'Obra: ' + obra.titulo" class="obra-img">
+    <div *ngFor="let obra of obras" class="card obra-card" style="position: relative;">
+      
+      <button 
+        *ngIf="esAlumno && idUsuarioLogueado === obra.alumnoId" 
+        (click)="eliminarObra(obra.id_obra || obra.id, obra.alumnoId)"
+        title="Eliminar registro"
+        style="position: absolute; top: 10px; right: 10px; background-color: #dc3545; color: white; border: none; border-radius: 4px; padding: 5px 10px; cursor: pointer; z-index: 10;">
+        &times;
+      </button>
+
+      <img 
+        [src]="obra.imagenUrl" 
+        (error)="obra.imagenUrl = 'https://images.unsplash.com/photo-1460661419201-fd4cecdf8a8b?w=500&q=80'" 
+        [alt]="'Obra: ' + obra.titulo" 
+        class="obra-img clickable-img"
+        (click)="abrirModal(obra.imagenUrl)">
       
       <h3 style="margin-top: 0;">{{ obra.titulo }}</h3>
       <p style="margin-bottom: 15px;"><strong>ID Alumno:</strong> {{ obra.alumnoId }}</p>
@@ -68,27 +85,13 @@
   </div>
 
   <div *ngIf="paginasTotales > 1" style="display: flex; justify-content: center; align-items: center; gap: 20px; margin-top: 40px; margin-bottom: 20px;">
-    <button 
-      (click)="cambiarPagina(paginaActual - 1)" 
-      [disabled]="paginaActual === 1"
-      class="btn-primary" 
-      style="padding: 10px 20px; background-color: #6c757d; border: none; cursor: pointer;"
-      [style.opacity]="paginaActual === 1 ? '0.5' : '1'">
-      &laquo; Anterior
-    </button>
-    
-    <span style="font-weight: bold; color: #333; font-size: 1.1em;">
-      Página {{ paginaActual }} de {{ paginasTotales }}
-    </span>
-
-    <button 
-      (click)="cambiarPagina(paginaActual + 1)" 
-      [disabled]="paginaActual === paginasTotales"
-      class="btn-primary" 
-      style="padding: 10px 20px; background-color: #6c757d; border: none; cursor: pointer;"
-      [style.opacity]="paginaActual === paginasTotales ? '0.5' : '1'">
-      Siguiente &raquo;
-    </button>
+    <button (click)="cambiarPagina(paginaActual - 1)" [disabled]="paginaActual === 1" class="btn-primary" style="padding: 10px 20px; background-color: #6c757d; border: none; cursor: pointer;" [style.opacity]="paginaActual === 1 ? '0.5' : '1'">&laquo; Anterior</button>
+    <span style="font-weight: bold; color: #333; font-size: 1.1em;">Página {{ paginaActual }} de {{ paginasTotales }}</span>
+    <button (click)="cambiarPagina(paginaActual + 1)" [disabled]="paginaActual === paginasTotales" class="btn-primary" style="padding: 10px 20px; background-color: #6c757d; border: none; cursor: pointer;" [style.opacity]="paginaActual === paginasTotales ? '0.5' : '1'">Siguiente &raquo;</button>
   </div>
+</div>
 
+<div *ngIf="imagenModalActiva" class="modal-overlay" (click)="cerrarModal()">
+  <span class="btn-cerrar-modal" (click)="cerrarModal()">&times;</span>
+  <img [src]="imagenModalActiva" class="modal-img-full" (click)="$event.stopPropagation()">
 </div>
