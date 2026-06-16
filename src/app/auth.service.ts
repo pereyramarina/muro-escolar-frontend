@@ -3,7 +3,6 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Observable, tap } from 'rxjs';
 import { environment } from '../environments/environment'; 
 
-// 1. Actualizamos la interfaz para que TypeScript reconozca el nuevo campo 'id'
 interface AuthResponse {
   access_token: string;
   perfil: {
@@ -27,7 +26,6 @@ export class AuthService {
       tap(response => {
         localStorage.setItem('token', response.access_token);
         localStorage.setItem('user_role', response.perfil.role);
-        // 2. Guardamos el ID del usuario directamente en el navegador
         localStorage.setItem('user_id', response.perfil.id.toString());
         localStorage.setItem('user_profile', JSON.stringify(response.perfil));
       })
@@ -52,7 +50,6 @@ export class AuthService {
     return localStorage.getItem('user_role');
   }
 
-  // 3. Nuevo método para extraer el ID del usuario autenticado en cualquier componente
   getUserId(): number | null {
     const id = localStorage.getItem('user_id');
     return id ? parseInt(id, 10) : null;

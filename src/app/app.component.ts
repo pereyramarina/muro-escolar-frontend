@@ -1,8 +1,7 @@
 import { Component } from '@angular/core';
 import { RouterOutlet, RouterModule } from '@angular/router';
-import { CommonModule } from '@angular/common'; // Necesario para el *ngIf
-import { AuthService } from './auth.service';   // Tu servicio de seguridad
-
+import { CommonModule } from '@angular/common';
+import { AuthService } from './auth.service';
 @Component({
   selector: 'app-root',
   standalone: true,
@@ -13,10 +12,8 @@ import { AuthService } from './auth.service';   // Tu servicio de seguridad
 export class AppComponent {
   title = 'muro-escolar-frontend';
 
-  // Inyectamos el servicio de forma pública para usarlo en el HTML
   constructor(public authService: AuthService) {}
 
-  // Lógica para decidir si mostrar el botón del Panel Analítico
   get esDirectivo(): boolean {
     return this.authService.getRole() === 'directivo';
   }

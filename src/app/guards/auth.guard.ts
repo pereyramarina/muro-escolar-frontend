@@ -6,13 +6,11 @@ export const authGuard: CanActivateFn = (route, state) => {
   const authService = inject(AuthService);
   const router = inject(Router);
 
-  // Verificación base: ¿Está logueado?
   if (!authService.isLoggedIn()) {
     router.navigate(['/login']);
     return false;
   } 
   
-  // 2. Leemos el rol del usuario
   const rolUsuario = authService.getRole();
 
   if (state.url.includes('/feedback') && rolUsuario !== 'docente') {
@@ -27,6 +25,5 @@ export const authGuard: CanActivateFn = (route, state) => {
     return false;
   }
 
-  // Si tiene sesión y la ruta es válida para su rol, lo dejamos pasar
   return true;
 };

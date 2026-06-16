@@ -7,7 +7,6 @@ import { authInterceptor } from './interceptors/auth.interceptor';
 export const appConfig: ApplicationConfig = {
   providers: [
     provideRouter(routes),
-    // 3. Registramos el interceptor en el motor HTTP
     provideHttpClient(withInterceptors([authInterceptor])) 
   ]
 };
