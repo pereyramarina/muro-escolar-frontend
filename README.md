@@ -1,59 +1,31 @@
-# MuroEscolarFrontend
+# 🎨 Muro Escolar - Frontend
 
-This project was generated using [Angular CLI](https://github.com/angular/angular-cli) version 19.2.27.
+## 📝 Descripción del Proyecto
+La aplicación cliente de **Muro Escolar** es una interfaz dinámica y adaptativa. Está diseñada para facilitar la interacción de la comunidad educativa, permitiendo una navegación intuitiva, la gestión visual de proyectos y la lectura de estadísticas, todo respaldado por un acceso seguro e inmediato.
 
-## Development server
+---
 
-To start a local development server, run:
+## 👥 Perfiles Institucionales
 
-```bash
-ng serve
-```
+| Rol de Usuario | Nivel de Acceso y Funciones |
+| :--- | :--- |
+| **Directivo** | Acceso total. Supervisión del sistema y visualización del panel de métricas globales. |
+| **Docente** | Gestión de aulas. Seguimiento de proyectos y emisión de devoluciones a los estudiantes. |
+| **Alumno** | Acceso personal. Carga de obras, visualización de portafolio y lectura de feedback. |
 
-Once the server is running, open your browser and navigate to `http://localhost:4200/`. The application will automatically reload whenever you modify any of the source files.
+---
 
-## Code scaffolding
+## ✨ Características Principales
+* **Sesiones Persistentes:** Autenticación fluida que almacena de forma segura los tokens JWT, evitando inicios de sesión repetitivos al abrir la aplicación.
+* **Vistas Dinámicas:** El dashboard adapta su menú y sus herramientas de forma automática según el rol del usuario autenticado.
+* **Sistema de Feedback:** Interfaz dedicada a la comunicación constructiva y evaluación de las obras artísticas.
+* **Reportes Estadísticos:** Gráficos y resúmenes de actividad consultados en tiempo real desde la red de microservicios.
 
-Angular CLI includes powerful code scaffolding tools. To generate a new component, run:
+---
 
-```bash
-ng generate component component-name
-```
+## 🚀 Guía de Instalación y Ejecución
 
-For a complete list of available schematics (such as `components`, `directives`, or `pipes`), run:
-
-```bash
-ng generate --help
-```
-
-## Building
-
-To build the project run:
-
-```bash
-ng build
-```
-
-This will compile your project and store the build artifacts in the `dist/` directory. By default, the production build optimizes your application for performance and speed.
-
-## Running unit tests
-
-To execute unit tests with the [Karma](https://karma-runner.github.io) test runner, use the following command:
-
-```bash
-ng test
-```
-
-## Running end-to-end tests
-
-For end-to-end (e2e) testing, run:
-
-```bash
-ng e2e
-```
-
-Angular CLI does not come with an end-to-end testing framework by default. You can choose one that suits your needs.
-
-## Additional Resources
-
-For more information on using the Angular CLI, including detailed command references, visit the [Angular CLI Overview and Command Reference](https://angular.dev/tools/cli) page.
+1. Clonar el repositorio en el entorno local.
+2. Ejecutar el comando `npm install` para integrar todas las librerías de la interfaz.
+3. Confirmar que el backend (API Gateway) se encuentre en ejecución en el puerto `3000`.
+4. Ejecutar el comando de inicio (por ejemplo, `npm run start` o `npm run dev` según el framework utilizado).
